@@ -12,7 +12,7 @@ def receive_messages(client_socket):
 
 def start_client():
     # Server information
-    server_ip = '127.0.0.1'  # Ganti dengan IP server
+    server_ip = '172.20.10.7'  # Ganti dengan IP server
     server_port = 12345      # Port yang sama dengan server
 
     # Create UDP socket
