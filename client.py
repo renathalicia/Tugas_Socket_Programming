@@ -8,9 +8,6 @@ buffer = 1024
 # Membuat socket UDP
 client = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
-# Client input username
-username = input("Masukkan username: ")
-
 def receive():
     while True:
         try:
@@ -19,14 +16,30 @@ def receive():
         except:
             break
 
+# Client input username yang valid
+username_valid = False
+while not username_valid: 
+    username = input("Masukkan username: ")
+
+    client.sendto(f"Username:{username}".encode(), (ip, port))
+
+    data, _ = client.recvfrom(buffer)
+    response = data.decode()
+    print(response)
+
+    if response == "Username valid!":
+        username_valid = True
+
 # Mengecek apakah password sudah benar
 password_correct = False
 while not password_correct:
     password = input("Masukkan password chatroom: ")
-    client.sendto(f"{username}:{password}".encode(), (ip, port))
+    client.sendto(f"Password:{password}".encode(), (ip, port))
+
     data, _ = client.recvfrom(buffer)
     response = data.decode()
     print(response)
+
     if response == "Berhasil bergabung!":
         password_correct = True
 
