@@ -1,41 +1,38 @@
 import socket
 import threading
 
-def receive_messages(client_socket):
+ip = input("Masukkan IP server: ")
+port = int(input("Masukkan port server: "))
+buffer = 1024
+
+# Membuat socket UDP
+client = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+
+# Client input username
+username = input("Masukkan username: ")
+
+def receive():
     while True:
         try:
-            message, _ = client_socket.recvfrom(1024)
-            print(message.decode('utf-8'))
-        except Exception as e:
-            print(f"Error receiving message: {e}")
+            data,_ = client.recvfrom(buffer)
+            print(data.decode())
+        except:
             break
 
-def start_client():
-    # Server information
-    server_ip = '172.20.10.7'  # Ganti dengan IP server
-    server_port = 12345      # Port yang sama dengan server
+# Mengecek apakah password sudah benar
+password_correct = False
+while not password_correct:
+    password = input("Masukkan password chatroom: ")
+    client.sendto(f"{username}:{password}".encode(), (ip, port))
+    data, _ = client.recvfrom(buffer)
+    response = data.decode()
+    print(response)
+    if response == "Berhasil bergabung!":
+        password_correct = True
 
-    # Create UDP socket
-    client_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+receive_thread = threading.Thread(target=receive)
+receive_thread.start()
 
-    username = input("Enter your username: ")
-    password = input("Enter the chatroom password: ")  # Password tidak divalidasi saat ini
-
-    # Initial message to join the chatroom
-    client_socket.sendto(f"{username} has joined the chat".encode('utf-8'), (server_ip, server_port))
-
-    # Start a thread to receive messages from server
-    thread = threading.Thread(target=receive_messages, args=(client_socket,))
-    thread.start()
-
-    while True:
-        message = input()
-        if message.lower() == 'exit':
-            client_socket.sendto(f"{username} has left the chat".encode('utf-8'), (server_ip, server_port))
-            break
-        client_socket.sendto(f"{username}: {message}".encode('utf-8'), (server_ip, server_port))
-
-    client_socket.close()
-
-if __name__ == "__main__":
-    start_client()
+while True:
+    message = input()
+    client.sendto(message.encode(), (ip, port))

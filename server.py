@@ -1,44 +1,38 @@
 import socket
-import threading
 
-# Global list to store client addresses
-clients = []
+ip = "127.0.0.1"  
+port = 12345      
+buffer = 1024
+clients = {}
 
-def handle_client(server_socket, client_address):
-    while True:
-        try:
-            message, _ = server_socket.recvfrom(1024)
-            print(f"Message from {client_address}: {message.decode('utf-8')}")
+# Membuat socket UDP
+server = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+server.bind((ip, port))
 
-            # Forward the message to other clients
-            for client in clients:
-                if client != client_address:
-                    server_socket.sendto(message, client)
+print(f"Server berjalan di {ip}:{port}")
 
-        except Exception as e:
-            print(f"Error: {e}")
-            clients.remove(client_address)
-            break
+def broadcast_message(message, sender_username):
+    """Meneruskan pesan ke semua client selain pengirim."""
+    for username, addr in clients.items():
+        if username != sender_username:
+            server.sendto(message.encode(), addr)
 
-def start_server():
-    # Server information
-    host = '172.20.10.7'  # Localhost
-    port = 12345        # Arbitrary non-privileged port
+while True:
+    data, client_addr = server.recvfrom(buffer)
+    message = data.decode()
 
-    # Create UDP socket
-    server_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    server_socket.bind((host, port))
-
-    print(f"Server started on {host}:{port}")
-
-    while True:
-        message, client_address = server_socket.recvfrom(1024)
-        if client_address not in clients:
-            clients.append(client_address)
-            print(f"New client connected: {client_address}")
-            # Start a new thread to handle communication
-            thread = threading.Thread(target=handle_client, args=(server_socket, client_address))
-            thread.start()
-
-if __name__ == "__main__":
-    start_server()
+    if client_addr not in clients.values():
+        if ":" in message:
+            username, password = message.split(":")
+            if password == "juara": 
+                clients[username] = client_addr
+                print(f"Client {username} bergabung dari {client_addr}")
+                server.sendto("Berhasil bergabung!".encode(), client_addr)
+            else:
+                server.sendto("Password salah!".encode(), client_addr)
+        else:
+            server.sendto("Format salah! Gunakan format username:password".encode(), client_addr)
+    else: 
+        sender_username = [name for name, addr in clients.items() if addr == client_addr][0]
+        print(f"Pesan dari {sender_username}: {message}")
+        broadcast_message(f"{sender_username}: {message}", sender_username)
