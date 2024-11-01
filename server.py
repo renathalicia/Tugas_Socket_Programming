@@ -1,7 +1,7 @@
 import socket
 
-ip = "127.0.0.1"  
-port = 12345      
+ip = input("Masukkan IP server: ")
+port = int(input("Masukkan port server: "))
 buffer = 1024
 clients = {} # Menyimpan client yang sudah valid
 pending = {} # Menyimpan client sementara sebelum validasi password
