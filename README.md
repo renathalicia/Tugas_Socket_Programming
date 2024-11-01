@@ -9,7 +9,7 @@ Disusun oleh: Nadia Apsarini Baizal(18223065) dan Audy Alicia Renatha Tirayoh(18
 - **Koneksi Multi-Klien**: Mendukung beberapa klien untuk bergabung ke dalam satu ruang obrolan secara bersamaan, memungkinkan komunikasi grup secara real-time.
 - **Autentikasi Pengguna**: Setiap klien harus memilih username yang unik dan memasukkan password yang benar untuk bergabung dalam chatroom, memberikan tingkat keamanan dasar.
 - **Penyiaran Pesan (Broadcasting)**: Pesan yang dikirim oleh seorang klien akan diteruskan oleh server ke semua klien lain yang sudah terhubung, memungkinkan obrolan grup.
-- **Penanganan Username Duplikat**: Server akan memeriksa apakah username yang dipilih oleh klien sudah digunakan. Jika sudah, klien akan diminta untuk memilih username lain.
+- **Antarmuka Grafis (GUI)**: Dibangun dengan tkinter untuk menyediakan tampilan antarmuka yang mudah digunakan.
 
 ## 💾 Project
 - `server.py`: Program server yang menangani koneksi klien, memvalidasi username dan password, serta meneruskan pesan ke klien yang sudah bergabung.
