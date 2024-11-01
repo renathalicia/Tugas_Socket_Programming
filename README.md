@@ -15,7 +15,7 @@ Disusun oleh: Nadia Apsarini Baizal(18223065) dan Audy Alicia Renatha Tirayoh(18
 - `server.py`: Program server yang menangani koneksi klien, memvalidasi username dan password, serta meneruskan pesan ke klien yang sudah bergabung.
 - `client.py`: Program klien yang menghubungkan ke server, memungkinkan pengguna memasukkan username dan password, serta mengirim dan menerima pesan dalam ruang obrolan.
 
-## How it Works
+## 👩‍🔧 How it Works
 ### 🚨 Server
 1. Server mendengarkan pesan UDP yang masuk dari klien.
 2. Klien pertama-tama divalidasi berdasarkan username dan password:
